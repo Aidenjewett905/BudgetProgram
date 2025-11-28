@@ -66,6 +66,11 @@ public:
 
 };
 
+static void clearBuffer() {
+	std::cin.clear();	//Clear errors due to invalid input
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
+}
+
 void static cutWhiteSpace(string& word) {
 	for (int i = 0; i < word.length(); i++)
 	{
@@ -158,7 +163,10 @@ bool static isMainCat(int i) {
 		return true;
 	}
 	else
+	{
+		clearBuffer();
 		return false;
+	}
 }
 
 void static outputIDAndCats(BudgetCategory* catPointer) {
@@ -326,11 +334,6 @@ void static removeCategory(int IDChoice, BudgetCategory* catPointer) {
 		cout << "ID " << IDChoice << " not found.\n";
 }
 
-static void clearBuffer() {
-	std::cin.clear();	//Clear errors due to invalid input
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
-}
-
 int main() {
 	bool menu1 = true; //Loop menu 1
 	bool menu2 = true; //Loop menu 2
@@ -367,7 +370,7 @@ int main() {
 				break;
 			default:
 				cout << "Error, invalid choice\n";
-				clearBuffer();
+				clearBuffer(); //Clear the buffer to make way for the next choice
 				break;
 		}
 
@@ -518,6 +521,7 @@ int main() {
 			break;
 		default:
 			cout << "Error, invalid choice\n";
+			clearBuffer(); //Clear the buffer to make room for next choice
 			break;
 		}
 
