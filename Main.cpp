@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cctype>
 #include <iomanip>
+#include <limits>
 
 using namespace std;
 
@@ -361,6 +362,8 @@ int main() {
 				break;
 			default:
 				cout << "Error, invalid choice\n";
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 				break;
 		}
 
@@ -466,7 +469,7 @@ int main() {
 			outputIDAndCats(categories.data());
 			do {
 				cout << "Select a category ID other than main to modify: ";
-				cin >> IDChoice;
+				std::cin >> IDChoice;
 			} while (isMainCat(IDChoice));
 			addToCategory(IDChoice, categories.data());
 			break;
@@ -479,7 +482,7 @@ int main() {
 			do {
 				cout << "Select a category ID to remove, or select a negative value to add " << 
 					"a new category (You cannot select main): ";
-				cin >> IDChoice;
+				std::cin >> IDChoice;
 			} while (isMainCat(IDChoice));
 			if (IDChoice <= 0 && numOfCategories < 10)
 			{
@@ -496,8 +499,8 @@ int main() {
 			break;
 		case 6: //Save File
 			cout << "Enter the name of the new file (This will override a file if it already exists): ";
-			getline(cin, fileName);
-			getline(cin, fileName);
+			std::getline(std::cin, fileName);
+			std::getline(std::cin, fileName);
 			file2.open(fileName, ios::out); //Deletes any old data then writes to file
 			saveToFile(file2, categories.data(), numOfCategories);
 			file2.close();
@@ -505,7 +508,7 @@ int main() {
 		case 7: //Exit
 			cout << "Are you sure you wish to exit? If you have not saved a file " <<
 				"your data will be lost (y/n): ";
-			cin >> yOrNChoice;
+			std::cin >> yOrNChoice;
 			if (yOrNChoice == 'y' || yOrNChoice == 'Y')
 				menu2 = false;
 			break;
