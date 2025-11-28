@@ -362,8 +362,8 @@ int main() {
 				break;
 			default:
 				cout << "Error, invalid choice\n";
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cin.clear();	//Clear errors due to invalid input
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
 				break;
 		}
 
