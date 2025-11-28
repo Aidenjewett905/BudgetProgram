@@ -326,6 +326,11 @@ void static removeCategory(int IDChoice, BudgetCategory* catPointer) {
 		cout << "ID " << IDChoice << " not found.\n";
 }
 
+static void clearBuffer() {
+	std::cin.clear();	//Clear errors due to invalid input
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
+}
+
 int main() {
 	bool menu1 = true; //Loop menu 1
 	bool menu2 = true; //Loop menu 2
@@ -362,8 +367,7 @@ int main() {
 				break;
 			default:
 				cout << "Error, invalid choice\n";
-				std::cin.clear();	//Clear errors due to invalid input
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
+				clearBuffer();
 				break;
 		}
 
