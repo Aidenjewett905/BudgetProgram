@@ -247,6 +247,7 @@ void static setNewPercentages(BudgetCategory* catPointer) {
 			cout << "Enter the percentage for the " << (catPointer + i)->getName() << 
 				" category in decimal format (ex: 45.2): ";
 			std::cin >> categoryPercent;
+			clearBuffer(); //If an invalid input gets stuck, this will clear it and allow the program to continue.
 			categoryPercent /= 100.0;
 			(catPointer + i)->setPercentOfBudget(categoryPercent);
 		}
