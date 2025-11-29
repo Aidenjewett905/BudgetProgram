@@ -1,5 +1,9 @@
-//Program allows user to save and load a budget, with specific categories
-//Includes multiple utility options in a menu
+//Name:			Budget Program
+//Description:	Program allows user to save and load a budget, with specific categories
+//				Includes multiple utility options in a menu
+//Author:		Aiden Jewett
+//Version:		v1.1.1
+//Version Date: 11/28/2025
 
 #include <iostream>
 #include <string>
@@ -66,12 +70,15 @@ public:
 
 };
 
-// The clearBuffer method clears the cin buffer. This will clear bad inputs, or do nothing if there is no bad input.
+//The clearBuffer function clears the cin buffer. This will clear bad inputs, or do nothing if there is no bad input.
 static void clearBuffer() {
 	std::cin.clear();	//Clear errors due to invalid input
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
 }
 
+//This function clears all of the whitespace from a string
+//This is performed by cutting all characters after the first whitespace, so it also clears anything after a space
+//Parameters: string& word - The string to have its whitespace removed
 void static cutWhiteSpace(string& word) {
 	for (int i = 0; i < word.length(); i++)
 	{
@@ -84,6 +91,9 @@ void static cutWhiteSpace(string& word) {
 	}
 }
 
+//This function splits off every character in a string that is not a digit or .
+//This allows the resulting string to be converted into a double or float
+//Parameters: string& word - The input string to be reduced to a double
 void static cutToDouble(string& word) {
 	for (int i = 0; i < word.length(); i++)
 	{
@@ -95,6 +105,9 @@ void static cutToDouble(string& word) {
 	}
 }
 
+//This function displays the budget categories to the screen in a readable format
+//Parameters:	BudgetCategory* catPointer - Pointer to an array that contains all of the budget categories
+//				to be output to the screen.
 void static displayToScreen(BudgetCategory* catPointer) {
 	printf("%2s | %14s %14s %14s\n", "ID", "Category    |", "Balance    |",
 		"Percentage   |");
@@ -107,6 +120,11 @@ void static displayToScreen(BudgetCategory* catPointer) {
 	}
 }
 
+//This function saves all of the categories to a file, in roughly the same format as displayToScreen
+//Ideally this function will be saved as a .txt file
+//Parameters:	fstream& file - A pointer that leads to the output file
+//				BudgetCategory* catPointer - A pointer that leads to the array of all budget categories to be saved
+//				int numOfCategories - Stores the total number of categories, including main, in the array
 void static saveToFile(fstream& file, BudgetCategory* catPointer, int numOfCategories) {
 	//ID |   Category    |     Balance    |     Percentage
 	file << setw(2) << right << "ID | "
@@ -127,6 +145,10 @@ void static saveToFile(fstream& file, BudgetCategory* catPointer, int numOfCateg
 	}
 }
 
+//This function modifies the balance contained within all budget categories
+//The balance is distributed based on the percentageOfBudget variable for each category, all adding up to 100%
+//Parameters:	double balanceModification - Variable that contains the amount of money to be added/removed
+//				BudgetCategory* catPointer - Pointer that leads to the array of budget categories
 void static modifyBalance(double balanceModification, BudgetCategory* catPointer) {
 	for (int i = 0; i < numOfCategories; i++)
 	{
@@ -137,8 +159,12 @@ void static modifyBalance(double balanceModification, BudgetCategory* catPointer
 	}
 }
 
+//This function gets the accumulated percentage of all budget categories
+//This is useful for ensuring that all of the categories add up to 100%
+//Parameters:	BudgetCategory* catPointer - Pointer that leads to the array of budget categories
+//Returns:	The total accumulated percentage of all categories as a double
 double static getTotalPercentage(BudgetCategory* catPointer) {
-	double totalPercent = 0.0;
+	double totalPercent = 0.0; //Accumulator
 	for (int i = 1; i < numOfCategories; i++)
 	{
 		totalPercent += (catPointer + i)->getPercentOfBudget();
@@ -147,6 +173,10 @@ double static getTotalPercentage(BudgetCategory* catPointer) {
 	return totalPercent;
 }
 
+//This function gets the total balance value of each budget category
+//This is useful for allocating a balance to the total category
+//Parameters:	BudgetCategory* catPointer - Pointer that leads to the array containing the budget categories
+//Returns:		The total accumulated balance in all of the budget categories
 double static getTotalValue(BudgetCategory* catPointer) {
 	double totalBalance = 0.0;
 	for (int i = 1; i < numOfCategories; i++)
@@ -157,6 +187,12 @@ double static getTotalValue(BudgetCategory* catPointer) {
 	return totalBalance;
 }
 
+//This function determines if the inputted integer value refers to the main category
+//The main category is defined as being ID 1
+//If the category is main, an error message is sent, and if not then the buffer is cleared
+//Parameters:	int i - The integer ID to check if equal to 1
+//Returns:		if i = 1 true is returned
+//				if i != 1 false is returned
 bool static isMainCat(int i) {
 	if (i == 1)
 	{
@@ -170,6 +206,8 @@ bool static isMainCat(int i) {
 	}
 }
 
+//This function outputs list of all budget categories and their associated IDs
+//Parameters:	BudgetCategory* catPointer - A pointer to the array of budget categories
 void static outputIDAndCats(BudgetCategory* catPointer) {
 	
 	printf("%2s | %-14s\n", "ID", "Category");
@@ -180,6 +218,13 @@ void static outputIDAndCats(BudgetCategory* catPointer) {
 	}
 }
 
+//This function prompts the user to select how much balance they wish to add/subtract from a specific category
+//The specific category is decided by the parameters
+//The buffer is cleared after the user input, which prevents an invalid input from crashing the program
+//In order to find the ID, first the index equal to the ID is checked, and then if not found, a manual 
+//search is performed to find the valid ID
+//Parameters:	int IDChoice - the ID of the category to be modified
+//				BudgetCategory* catPointer - Pointer that leads to the array of budget categories
 void static addToCategory(int IDChoice, BudgetCategory* catPointer) {
 	double modification = 0;
 	bool foundID = false;
@@ -216,6 +261,8 @@ void static addToCategory(int IDChoice, BudgetCategory* catPointer) {
 		catPointer->setBalance(getTotalValue(catPointer));
 }
 
+//This function outputs a list of each category and their current percentage of the budget
+//Parameters:	BudgetCategory* catPointer - Pointer to the array of budget categories
 void static outputCatsAndPercents(BudgetCategory* catPointer) {
 	for (int i = 0; i < numOfCategories; i++)
 	{
@@ -225,6 +272,11 @@ void static outputCatsAndPercents(BudgetCategory* catPointer) {
 	}
 }
 
+//This function checks if a percentage is not 100%, defined as being a double value == 1.0
+//If the value is not 100%, an error message will be displayed
+//Parameters:		double percent - the double percentage to be checked
+//Returns:			if double != 1.0 true is returned
+//					else false is returned
 bool static notOneHundredPercent(double percent) {
 	if (percent != 1.0)
 	{
@@ -235,6 +287,10 @@ bool static notOneHundredPercent(double percent) {
 		return false;
 }
 
+//This function prompts the user to enter a new percentage for each individual category within the array
+//The buffer is cleared after each input, preventing invalid inputs from crashing the program
+//If the total value is equal to 100%, the function returns, otherwise it loops again until the total percent is 100
+//Parameters:	BudgetCategory* catPointer - Pointer that leads to the list of budget categories
 void static setNewPercentages(BudgetCategory* catPointer) {
 	cout << "List of Categories:\n";
 	outputCatsAndPercents(catPointer);
@@ -261,6 +317,11 @@ void static setNewPercentages(BudgetCategory* catPointer) {
 
 }
 
+//This function adds a new category to the list of categories
+//The function prompts the user to enter a name and balance, and will initialize the percentage as
+//100% if it is the first non-main category, otherwise as 0%
+//The buffer is cleared after each input, preventing a bad input from crashing the program
+//Parameters:	BudgetCategory* catPointer - Pointer to the array of budget categories
 void static addNewCategory(BudgetCategory* catPointer) {
 	string catName;
 	double startingBalance;
@@ -286,6 +347,10 @@ void static addNewCategory(BudgetCategory* catPointer) {
 	*catPointer = BudgetCategory(catName, startingBalance, startingPercentage);
 }
 
+//This function erases a budget category from the array, removing the percentages and balances from the total
+//The function also moves every single category after the removed category back by 1, so there are no gaps
+//Parameters:	BudgetCategory* catPointer - Pointer to the array of categories
+//				int index - index (not ID) of the category to be removed
 void static eraseArrayCategory(BudgetCategory* catPointer, int index) {
 	numOfCategories--;
 
@@ -309,6 +374,13 @@ void static eraseArrayCategory(BudgetCategory* catPointer, int index) {
 
 }
 
+//This function facilitates the removal of a category within the array of categories
+//First the category is found by ID, first by checking if the category is at the index = ID, then by checking
+//through the array.
+//If the category is found, eraseArrayCategory is called, and a message is output confirming the removal
+//If the category is not found, an error message is output
+//Parameters:	int IDChoice - The ID of the category to be removed
+//				BudgetCategory* catPointer - Pointer to the array of budget categories
 void static removeCategory(int IDChoice, BudgetCategory* catPointer) {
 	int indexOfRemoval = 0;
 	bool foundID = false;
@@ -487,7 +559,14 @@ int main() {
 			addToCategory(IDChoice, categories.data());
 			break;
 		case 4: //Modify category percentage
-			setNewPercentages(categories.data());
+			if (numOfCategories > 1)
+			{
+				setNewPercentages(categories.data());
+			}
+			else
+			{
+				cout << "No categories except main exist, cannot modify percentages.\n";
+			}
 			break;
 		case 5: //Add/Remove category
 			cout << "List of Categories:\n";
