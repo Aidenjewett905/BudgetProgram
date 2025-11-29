@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cctype>
 #include <iomanip>
+#include <limits>
 
 using namespace std;
 
@@ -64,6 +65,12 @@ public:
 	}
 
 };
+
+// The clearBuffer method clears the cin buffer. This will clear bad inputs, or do nothing if there is no bad input.
+static void clearBuffer() {
+	std::cin.clear();	//Clear errors due to invalid input
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
+}
 
 void static cutWhiteSpace(string& word) {
 	for (int i = 0; i < word.length(); i++)
@@ -157,7 +164,10 @@ bool static isMainCat(int i) {
 		return true;
 	}
 	else
+	{
+		clearBuffer();
 		return false;
+	}
 }
 
 void static outputIDAndCats(BudgetCategory* catPointer) {
@@ -176,6 +186,7 @@ void static addToCategory(int IDChoice, BudgetCategory* catPointer) {
 	
 	cout << "Enter the amount to add to the category, enter a negative value to subtract: ";
 	std::cin >> modification;
+	clearBuffer(); //Cut off invalid input
 
 	//If the IDs are in order this avoids searching the entire array
 	//First part of the statement will prevent an out of bounds exception by ensuring that
@@ -237,6 +248,7 @@ void static setNewPercentages(BudgetCategory* catPointer) {
 			cout << "Enter the percentage for the " << (catPointer + i)->getName() << 
 				" category in decimal format (ex: 45.2): ";
 			std::cin >> categoryPercent;
+			clearBuffer(); //If an invalid input gets stuck, this will clear it and allow the program to continue.
 			categoryPercent /= 100.0;
 			(catPointer + i)->setPercentOfBudget(categoryPercent);
 		}
@@ -255,8 +267,10 @@ void static addNewCategory(BudgetCategory* catPointer) {
 	double startingPercentage;
 	cout << "Enter a name for the new category (Do not include spaces): ";
 	std::cin >> catName;
+	clearBuffer(); //Clear the buffer just in case user included a space, this prevents it from jamming other inputs
 	cout << "Enter a starting balance for the category: ";
 	std::cin >> startingBalance;
+	clearBuffer(); //Clear buffer in case non-int is inputted, will result to some sort of int in startingBalance
 	cout << "Percent of Budget will be initialized as 0 or 100, the ID will be automatically chosen.\n";
 
 	catPointer->operator+(startingBalance); //Add the new balance to main
@@ -361,6 +375,7 @@ int main() {
 				break;
 			default:
 				cout << "Error, invalid choice\n";
+				clearBuffer(); //Clear the buffer to make way for the next choice
 				break;
 		}
 
@@ -459,6 +474,7 @@ int main() {
 		case 2: //Add/Subtract balance
 			cout << "How much balance are you adding? (enter a negative value for subtraction): ";
 			std::cin >> moneyAmount;
+			clearBuffer(); //If the user entered an invalid value, it will get cut off of the input.
 			modifyBalance(moneyAmount, categories.data());
 			break;
 		case 3: //Add/Subtract from category
@@ -466,8 +482,8 @@ int main() {
 			outputIDAndCats(categories.data());
 			do {
 				cout << "Select a category ID other than main to modify: ";
-				cin >> IDChoice;
-			} while (isMainCat(IDChoice));
+				std::cin >> IDChoice;
+			} while (isMainCat(IDChoice)); //Buffer clear is present in this function, invalid IDChoice becomes 0.
 			addToCategory(IDChoice, categories.data());
 			break;
 		case 4: //Modify category percentage
@@ -479,8 +495,8 @@ int main() {
 			do {
 				cout << "Select a category ID to remove, or select a negative value to add " << 
 					"a new category (You cannot select main): ";
-				cin >> IDChoice;
-			} while (isMainCat(IDChoice));
+				std::cin >> IDChoice;
+			} while (isMainCat(IDChoice)); //Makes sure it is not main, and clears buffer in case of error
 			if (IDChoice <= 0 && numOfCategories < 10)
 			{
 				addNewCategory(categories.data());
@@ -496,8 +512,8 @@ int main() {
 			break;
 		case 6: //Save File
 			cout << "Enter the name of the new file (This will override a file if it already exists): ";
-			getline(cin, fileName);
-			getline(cin, fileName);
+			std::getline(std::cin, fileName);
+			std::getline(std::cin, fileName);
 			file2.open(fileName, ios::out); //Deletes any old data then writes to file
 			saveToFile(file2, categories.data(), numOfCategories);
 			file2.close();
@@ -505,12 +521,13 @@ int main() {
 		case 7: //Exit
 			cout << "Are you sure you wish to exit? If you have not saved a file " <<
 				"your data will be lost (y/n): ";
-			cin >> yOrNChoice;
+			std::cin >> yOrNChoice;
 			if (yOrNChoice == 'y' || yOrNChoice == 'Y')
 				menu2 = false;
 			break;
 		default:
 			cout << "Error, invalid choice\n";
+			clearBuffer(); //Clear the buffer to make room for next choice
 			break;
 		}
 
