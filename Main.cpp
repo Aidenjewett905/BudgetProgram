@@ -185,6 +185,7 @@ void static addToCategory(int IDChoice, BudgetCategory* catPointer) {
 	
 	cout << "Enter the amount to add to the category, enter a negative value to subtract: ";
 	std::cin >> modification;
+	clearBuffer(); //Cut off invalid input
 
 	//If the IDs are in order this avoids searching the entire array
 	//First part of the statement will prevent an out of bounds exception by ensuring that
@@ -471,6 +472,7 @@ int main() {
 		case 2: //Add/Subtract balance
 			cout << "How much balance are you adding? (enter a negative value for subtraction): ";
 			std::cin >> moneyAmount;
+			clearBuffer(); //If the user entered an invalid value, it will get cut off of the input.
 			modifyBalance(moneyAmount, categories.data());
 			break;
 		case 3: //Add/Subtract from category
@@ -479,7 +481,7 @@ int main() {
 			do {
 				cout << "Select a category ID other than main to modify: ";
 				std::cin >> IDChoice;
-			} while (isMainCat(IDChoice));
+			} while (isMainCat(IDChoice)); //Buffer clear is present in this function, invalid IDChoice becomes 0.
 			addToCategory(IDChoice, categories.data());
 			break;
 		case 4: //Modify category percentage
