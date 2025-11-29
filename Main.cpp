@@ -264,8 +264,10 @@ void static addNewCategory(BudgetCategory* catPointer) {
 	double startingPercentage;
 	cout << "Enter a name for the new category (Do not include spaces): ";
 	std::cin >> catName;
+	clearBuffer(); //Clear the buffer just in case user included a space, this prevents it from jamming other inputs
 	cout << "Enter a starting balance for the category: ";
 	std::cin >> startingBalance;
+	clearBuffer(); //Clear buffer in case non-int is inputted, will result to some sort of int in startingBalance
 	cout << "Percent of Budget will be initialized as 0 or 100, the ID will be automatically chosen.\n";
 
 	catPointer->operator+(startingBalance); //Add the new balance to main
