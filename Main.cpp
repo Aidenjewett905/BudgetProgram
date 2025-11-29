@@ -487,7 +487,14 @@ int main() {
 			addToCategory(IDChoice, categories.data());
 			break;
 		case 4: //Modify category percentage
-			setNewPercentages(categories.data());
+			if (numOfCategories > 1)
+			{
+				setNewPercentages(categories.data());
+			}
+			else
+			{
+				cout << "No categories except main exist, cannot modify percentages.\n";
+			}
 			break;
 		case 5: //Add/Remove category
 			cout << "List of Categories:\n";
