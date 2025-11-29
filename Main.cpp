@@ -66,6 +66,7 @@ public:
 
 };
 
+// The clearBuffer method clears the cin buffer. This will clear bad inputs, or do nothing if there is no bad input.
 static void clearBuffer() {
 	std::cin.clear();	//Clear errors due to invalid input
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Clear buffer to allow for new input
