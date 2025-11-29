@@ -490,7 +490,7 @@ int main() {
 				cout << "Select a category ID to remove, or select a negative value to add " << 
 					"a new category (You cannot select main): ";
 				std::cin >> IDChoice;
-			} while (isMainCat(IDChoice));
+			} while (isMainCat(IDChoice)); //Makes sure it is not main, and clears buffer in case of error
 			if (IDChoice <= 0 && numOfCategories < 10)
 			{
 				addNewCategory(categories.data());
